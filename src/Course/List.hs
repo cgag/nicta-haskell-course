@@ -74,8 +74,7 @@ headOr ::
   a
   -> List a
   -> a
-headOr =
-  error "todo"
+headOr = foldRight const
 
 -- | The product of the elements of a list.
 --
@@ -87,8 +86,7 @@ headOr =
 product ::
   List Int
   -> Int
-product =
-  error "todo"
+product = foldRight (*) 1
 
 -- | Sum the elements of the list.
 --
@@ -102,8 +100,7 @@ product =
 sum ::
   List Int
   -> Int
-sum =
-  error "todo"
+sum = foldLeft (+) 0
 
 -- | Return the length of the list.
 --
@@ -114,8 +111,7 @@ sum =
 length ::
   List a
   -> Int
-length =
-  error "todo"
+length = foldLeft (const . succ) 0
 
 -- | Map the given function on each element of the list.
 --
@@ -129,8 +125,7 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map =
-  error "todo"
+map f = foldRight ((:.) . f) Nil
 
 -- | Return elements satisfying the given predicate.
 --
@@ -146,8 +141,7 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
-filter =
-  error "todo"
+filter f = foldRight (\e xs -> if f e then e:.xs else xs) Nil
 
 -- | Append two lists to a new list.
 --
@@ -162,11 +156,10 @@ filter =
 --
 -- prop> x ++ Nil == x
 (++) ::
-  List a
+     List a
   -> List a
   -> List a
-(++) =
-  error "todo"
+(++) orig new = foldRight (:.) new orig
 
 infixr 5 ++
 
@@ -183,8 +176,7 @@ infixr 5 ++
 flatten ::
   List (List a)
   -> List a
-flatten =
-  error "todo"
+flatten = foldRight (++) Nil
 
 -- | Map a function then flatten to a list.
 --
@@ -215,7 +207,7 @@ flattenAgain =
 
 -- | Convert a list of optional values to an optional list of values.
 --
--- * If the list contains all `Full` values, 
+-- * If the list contains all `Full` values,
 -- then return `Full` list of values.
 --
 -- * If the list contains one or more `Empty` values,
